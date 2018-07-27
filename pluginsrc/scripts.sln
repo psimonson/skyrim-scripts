@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "horsespawner", "horsespawner.vcxproj", "{22937B2D-DA1A-4A97-B860-F14F606C6695}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "undress", "undress.vcxproj", "{FD762B8C-FF14-40C0-8BFD-A8B926021F34}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "trainer", "trainer.vcxproj", "{3BFBFF9E-E415-447A-BE0C-3F144F5FA2B7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "weather", "weather.vcxproj", "{292F07B2-3C62-4A41-B66A-1AF6B28C7DF8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PRSMagicTweak", "PRSMagicTweak.vcxproj", "{9FA22DFD-D862-4DC1-89A2-EE1FA5923E9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		main|Win32 = main|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22937B2D-DA1A-4A97-B860-F14F606C6695}.main|Win32.ActiveCfg = main|Win32
+		{22937B2D-DA1A-4A97-B860-F14F606C6695}.main|Win32.Build.0 = main|Win32
+		{FD762B8C-FF14-40C0-8BFD-A8B926021F34}.main|Win32.ActiveCfg = main|Win32
+		{FD762B8C-FF14-40C0-8BFD-A8B926021F34}.main|Win32.Build.0 = main|Win32
+		{3BFBFF9E-E415-447A-BE0C-3F144F5FA2B7}.main|Win32.ActiveCfg = main|Win32
+		{3BFBFF9E-E415-447A-BE0C-3F144F5FA2B7}.main|Win32.Build.0 = main|Win32
+		{292F07B2-3C62-4A41-B66A-1AF6B28C7DF8}.main|Win32.ActiveCfg = main|Win32
+		{292F07B2-3C62-4A41-B66A-1AF6B28C7DF8}.main|Win32.Build.0 = main|Win32
+		{9FA22DFD-D862-4DC1-89A2-EE1FA5923E9A}.main|Win32.ActiveCfg = main|Win32
+		{9FA22DFD-D862-4DC1-89A2-EE1FA5923E9A}.main|Win32.Build.0 = main|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0ED1FB62-E23C-44C4-9561-8472801C71A6}
+	EndGlobalSection
+EndGlobal

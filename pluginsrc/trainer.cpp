@@ -1,0 +1,602 @@
+/*
+				TRAINER SCRIPT PLUGIN EXAMPLE
+
+	THIS FILE IS A PART OF THE SKYRIM DRAGON SCRIPT PROJECT	
+				(C) Alexander Blade 2011
+			http://Alexander.SannyBuilder.com
+*/
+
+#include "common\skyscript.h"
+#include "common\obscript.h"
+#include "common\types.h"
+#include "common\enums.h"
+#include "common\plugin.h"
+
+#define CONFIG_FILE "trainer.ini"
+#define SCR_NAME "Trainer"
+
+int perk_ids[] = {
+    ID_BGSPerk::TGWellFitted,
+    ID_BGSPerk::DBWellFitted,
+    ID_BGSPerk::IrilethVsDragons,
+    ID_BGSPerk::AugmentedShock60,
+    ID_BGSPerk::AugmentedFrost60,
+    ID_BGSPerk::AugmentedFlames60,
+    ID_BGSPerk::DA08EbonyBladePerk,
+    ID_BGSPerk::MGArchMageVendorPerk,
+    ID_BGSPerk::DualFlurryActive,
+    ID_BGSPerk::TG00Pickpockethelper,
+    ID_BGSPerk::VampireSkillsPerk02,
+    ID_BGSPerk::TGSkeletonKeyPerk,
+    ID_BGSPerk::crReduceDamage075,
+    ID_BGSPerk::MQ101SpiderReduceDamage,
+    ID_BGSPerk::RestedMarriagePerk,
+    ID_BGSPerk::RestedWellPerk,
+    ID_BGSPerk::SilverPerk,
+    ID_BGSPerk::crExtraDamage0112,
+    ID_BGSPerk::dunFrostflowAbyssPerk,
+    ID_BGSPerk::MS02IncreaseDamage,
+    ID_BGSPerk::crNerfDamage05,
+    ID_BGSPerk::CWGuardExtraDamageToPlayer,
+    ID_BGSPerk::NN01Perk,
+    ID_BGSPerk::crWoundedSpider,
+    ID_BGSPerk::CWSoldierExtraDamageToPlayer,
+    ID_BGSPerk::crFalmerPoison05,
+    ID_BGSPerk::crFalmerPoison04,
+    ID_BGSPerk::crFalmerPoison03,
+    ID_BGSPerk::crFalmerPoison02,
+    ID_BGSPerk::crFalmerPoison01,
+    ID_BGSPerk::crSprigganResistDamageWhileRegenerating,
+    ID_BGSPerk::MQ101BearReduceDamage,
+    ID_BGSPerk::DragonhideSpellPerk,
+    ID_BGSPerk::MasterTrader,
+    ID_BGSPerk::TempPers2,
+    ID_BGSPerk::TempPers1,
+    ID_BGSPerk::Persuasion,
+    ID_BGSPerk::SoulSiphon,
+    ID_BGSPerk::dunHunterQstPerk,
+    ID_BGSPerk::crReduceDamage05,
+    ID_BGSPerk::MatchingSetHeavy,
+    ID_BGSPerk::DeftMovement,
+    ID_BGSPerk::WaxKey,
+    ID_BGSPerk::MGR21RestorationMag,
+    ID_BGSPerk::MGR21RestorationCost,
+    ID_BGSPerk::MGR21IllusionDur,
+    ID_BGSPerk::MGR21IllusionCost,
+    ID_BGSPerk::MGR21ConjurationDur,
+    ID_BGSPerk::MGR21ConjurationCost,
+    ID_BGSPerk::MGR21AlterationDur,
+    ID_BGSPerk::MGR21AlterationCost,
+    ID_BGSPerk::MGR21DestructionMag,
+    ID_BGSPerk::MGR21DestructionCost,
+    ID_BGSPerk::MS02ReduceDamage,
+    ID_BGSPerk::QuickHands,
+    ID_BGSPerk::DualSavagery,
+    ID_BGSPerk::DualFlurry50,
+    ID_BGSPerk::DualFlurry30,
+    ID_BGSPerk::BlockRunner,
+    ID_BGSPerk::doomRitualPerk,
+    ID_BGSPerk::ReflectBlows,
+    ID_BGSPerk::RuneMaster,
+    ID_BGSPerk::Summoner70,
+    ID_BGSPerk::Summoner30,
+    ID_BGSPerk::ConcentratedPoison,
+    ID_BGSPerk::GreenThumb,
+    ID_BGSPerk::Snakeblood,
+    ID_BGSPerk::Experimenter90,
+    ID_BGSPerk::Experimenter70,
+    ID_BGSPerk::Intimidation,
+    ID_BGSPerk::Poisoned,
+    ID_BGSPerk::TreasureHunter,
+    ID_BGSPerk::Silence,
+    ID_BGSPerk::SilentRoll,
+    ID_BGSPerk::WindWalker,
+    ID_BGSPerk::CriticalShot90,
+    ID_BGSPerk::CriticalShot60,
+    ID_BGSPerk::CriticalShot30,
+    ID_BGSPerk::TrickShot,
+    ID_BGSPerk::QuickShot,
+    ID_BGSPerk::dunKatariahScimitarPerk,
+    ID_BGSPerk::TGNightingaleShadowPerk,
+    ID_BGSPerk::dunTargeOfTheBloodedPerk,
+    ID_BGSPerk::crDragonResistNPCs,
+    ID_BGSPerk::MQ101IncreaseDetection,
+    ID_BGSPerk::SteadyHand60,
+    ID_BGSPerk::SteadyHand40,
+    ID_BGSPerk::crExtraDamage045,
+    ID_BGSPerk::crExtraDamage035,
+    ID_BGSPerk::crExtraDamage025,
+    ID_BGSPerk::crExtraDamage015,
+    ID_BGSPerk::DeadlyAim,
+    ID_BGSPerk::crExtraDamage06,
+    ID_BGSPerk::crExtraDamage02,
+    ID_BGSPerk::DBBackstab,
+    ID_BGSPerk::TorchBashPerk,
+    ID_BGSPerk::RestedPerk,
+    ID_BGSPerk::crExtraDamage05,
+    ID_BGSPerk::crExtraDamage03,
+    ID_BGSPerk::crExtraDamage04,
+    ID_BGSPerk::C06BladeOfYsgramorPerk,
+    ID_BGSPerk::T03KynarethReward,
+    ID_BGSPerk::DA05HircinesRingCursedPerk,
+    ID_BGSPerk::DA05HircinesRingPerk,
+    ID_BGSPerk::MQBladesDragonInfusion,
+    ID_BGSPerk::MarriageMealPerk,
+    ID_BGSPerk::dunMossMotherPerk,
+    ID_BGSPerk::VampireSkillsPerk,
+    ID_BGSPerk::Disintegrate,
+    ID_BGSPerk::DeepFreeze,
+    ID_BGSPerk::IntenseFlames,
+    ID_BGSPerk::NoviceLocks00,
+    ID_BGSPerk::RestorationNovice00,
+    ID_BGSPerk::IllusionNovice00,
+    ID_BGSPerk::DestructionNovice00,
+    ID_BGSPerk::ConjurationNovice00,
+    ID_BGSPerk::AlterationNovice00,
+    ID_BGSPerk::MQ105PhantomFormPerk,
+    ID_BGSPerk::AllowShoutingPerk,
+    ID_BGSPerk::PowerNordBattleCryPerk,
+    ID_BGSPerk::DA11Cannibalism,
+    ID_BGSPerk::InvulnerableActorZeroIncomingDamage,
+    ID_BGSPerk::MQ304IncreaseAlduinDamage,
+    ID_BGSPerk::MS11InvestigationBlockActivationPerk,
+    ID_BGSPerk::T02MaraReward,
+    ID_BGSPerk::PlayerUnderforgeAccessPerk,
+    ID_BGSPerk::AlchemySkillBoosts,
+    ID_BGSPerk::doomSteedEncumberPerk,
+    ID_BGSPerk::DA04BloodHarvestPerk,
+    ID_BGSPerk::T01DibellaReward,
+    ID_BGSPerk::MGEnthirVendorPerk,
+    ID_BGSPerk::wardAbsorb,
+    ID_BGSPerk::MQ101ReduceAttackDamage,
+    ID_BGSPerk::MQ101ReduceDamage,
+    ID_BGSPerk::PlayerWerewolfFeed,
+    ID_BGSPerk::Impact,
+    ID_BGSPerk::RestorationDualCasting,
+    ID_BGSPerk::IllusionDualCasting,
+    ID_BGSPerk::DestructionDualCasting,
+    ID_BGSPerk::ConjurationDualCasting,
+    ID_BGSPerk::AlterationDualCasting,
+    ID_BGSPerk::MQGreybeardsYol,
+    ID_BGSPerk::MQGreybeardsFeim,
+    ID_BGSPerk::MQGreybeardsFus,
+    ID_BGSPerk::Headsman,
+    ID_BGSPerk::doomTowerPerk,
+    ID_BGSPerk::MQBladesDragonResearch,
+    ID_BGSPerk::MQBladesBlessing,
+    ID_BGSPerk::doomSteedPerk,
+    ID_BGSPerk::doomLoverPerk,
+    ID_BGSPerk::doomAtronachPerk,
+    ID_BGSPerk::doomWarriorPerk,
+    ID_BGSPerk::doomMagePerk,
+    ID_BGSPerk::doomThiefPerk,
+    ID_BGSPerk::PowerOrcBerserk,
+    ID_BGSPerk::QuickReflexes,
+    ID_BGSPerk::KeyMaster,
+    ID_BGSPerk::SoulStealer,
+    ID_BGSPerk::OblivionBinding,
+    ID_BGSPerk::MageArmor70,
+    ID_BGSPerk::MageArmor50,
+    ID_BGSPerk::MageArmor30,
+    ID_BGSPerk::TwinSouls,
+    ID_BGSPerk::ghostHalfDamagePerk,
+    ID_BGSPerk::ghostExtraDamagePerk,
+    ID_BGSPerk::PerkSkillBoosts,
+    ID_BGSPerk::VampireFeed,
+    ID_BGSPerk::ElementalPotency,
+    ID_BGSPerk::Atromancy,
+    ID_BGSPerk::AdvancedArmors,
+    ID_BGSPerk::DaedricSmithing,
+    ID_BGSPerk::EbonySmithing,
+    ID_BGSPerk::GlassSmithing,
+    ID_BGSPerk::OrcishSmithing,
+    ID_BGSPerk::ElvenSmithing,
+    ID_BGSPerk::DwarvenSmithing,
+    ID_BGSPerk::SteelSmithing,
+    ID_BGSPerk::GreatCriticalCharge,
+    ID_BGSPerk::CriticalCharge,
+    ID_BGSPerk::SavageBlows,
+    ID_BGSPerk::Limbsplitter90,
+    ID_BGSPerk::Limbsplitter60,
+    ID_BGSPerk::Limbsplitter30,
+    ID_BGSPerk::LightTouch80,
+    ID_BGSPerk::LightTouch60,
+    ID_BGSPerk::LightTouch40,
+    ID_BGSPerk::LightTouch20,
+    ID_BGSPerk::LightTouch00,
+    ID_BGSPerk::RestorationMaster100,
+    ID_BGSPerk::RestorationExpert75,
+    ID_BGSPerk::RestorationAdept50,
+    ID_BGSPerk::RestorationApprentice25,
+    ID_BGSPerk::IllusionMaster100,
+    ID_BGSPerk::IllusionExpert75,
+    ID_BGSPerk::IllusionAdept50,
+    ID_BGSPerk::IllusionApprentice25,
+    ID_BGSPerk::DestructionMaster100,
+    ID_BGSPerk::DestructionExpert75,
+    ID_BGSPerk::DestructionAdept50,
+    ID_BGSPerk::DestructionApprentice25,
+    ID_BGSPerk::ConjurationMaster100,
+    ID_BGSPerk::ConjurationExpert75,
+    ID_BGSPerk::ConjurationAdept50,
+    ID_BGSPerk::ConjurationApprentice25,
+    ID_BGSPerk::AlterationMaster100,
+    ID_BGSPerk::AlterationExpert75,
+    ID_BGSPerk::AlterationAdept50,
+    ID_BGSPerk::AlterationApprentice25,
+    ID_BGSPerk::Rage,
+    ID_BGSPerk::MasterLocks100,
+    ID_BGSPerk::ExpertLocks75,
+    ID_BGSPerk::AdeptLocks50,
+    ID_BGSPerk::Enchanter80,
+    ID_BGSPerk::Enchanter60,
+    ID_BGSPerk::Enchanter40,
+    ID_BGSPerk::Enchanter20,
+    ID_BGSPerk::HackAndSlash90,
+    ID_BGSPerk::HackAndSlash60,
+    ID_BGSPerk::Skullcrusher90,
+    ID_BGSPerk::Skullcrusher60,
+    ID_BGSPerk::DeepWounds90,
+    ID_BGSPerk::DeepWounds60,
+    ID_BGSPerk::BoneBreaker90,
+    ID_BGSPerk::BoneBreaker60,
+    ID_BGSPerk::Bladesman90,
+    ID_BGSPerk::Bladesman60,
+    ID_BGSPerk::Haggling80,
+    ID_BGSPerk::Haggling60,
+    ID_BGSPerk::Haggling40,
+    ID_BGSPerk::Haggling20,
+    ID_BGSPerk::Alchemist80,
+    ID_BGSPerk::Alchemist60,
+    ID_BGSPerk::Alchemist40,
+    ID_BGSPerk::Alchemist20,
+    ID_BGSPerk::Stealth80,
+    ID_BGSPerk::Stealth60,
+    ID_BGSPerk::Stealth40,
+    ID_BGSPerk::Stealth20,
+    ID_BGSPerk::LightFingers80,
+    ID_BGSPerk::LightFingers60,
+    ID_BGSPerk::LightFingers40,
+    ID_BGSPerk::LightFingers20,
+    ID_BGSPerk::AgileDefender80,
+    ID_BGSPerk::AgileDefender60,
+    ID_BGSPerk::AgileDefender40,
+    ID_BGSPerk::AgileDefender20,
+    ID_BGSPerk::Juggernaut80,
+    ID_BGSPerk::Juggernaut60,
+    ID_BGSPerk::Juggernaut40,
+    ID_BGSPerk::Juggernaut20,
+    ID_BGSPerk::ShieldWall80,
+    ID_BGSPerk::ShieldWall60,
+    ID_BGSPerk::ShieldWall40,
+    ID_BGSPerk::ShieldWall20,
+    ID_BGSPerk::Overdraw80,
+    ID_BGSPerk::Overdraw60,
+    ID_BGSPerk::Overdraw40,
+    ID_BGSPerk::Overdraw20,
+    ID_BGSPerk::Barbarian80,
+    ID_BGSPerk::Barbarian60,
+    ID_BGSPerk::Barbarian40,
+    ID_BGSPerk::Barbarian20,
+    ID_BGSPerk::Armsman80,
+    ID_BGSPerk::Armsman60,
+    ID_BGSPerk::Armsman20,
+    ID_BGSPerk::Armsman40,
+    ID_BGSPerk::Enchanter00,
+    ID_BGSPerk::Haggling00,
+    ID_BGSPerk::Alchemist00,
+    ID_BGSPerk::Stealth00,
+    ID_BGSPerk::ApprenticeLocks25,
+    ID_BGSPerk::LightFingers00,
+    ID_BGSPerk::AgileDefender00,
+    ID_BGSPerk::Cushioned,
+    ID_BGSPerk::Juggernaut00,
+    ID_BGSPerk::ShieldWall00,
+    ID_BGSPerk::Overdraw00,
+    ID_BGSPerk::Barbarian00,
+    ID_BGSPerk::Armsman00,
+    ID_BGSPerk::AvoidDeath,
+    ID_BGSPerk::ExtraPockets,
+    ID_BGSPerk::HackAndSlash30,
+    ID_BGSPerk::MysticBinding,
+    ID_BGSPerk::DeadlyBash,
+    ID_BGSPerk::BoneBreaker30,
+    ID_BGSPerk::Bladesman30,
+    ID_BGSPerk::DevastatingBlow,
+    ID_BGSPerk::ChampionsStance,
+    ID_BGSPerk::FightingStance,
+    ID_BGSPerk::AspectOfTerror,
+    ID_BGSPerk::HypnoticGaze,
+    ID_BGSPerk::MasterOfTheMind,
+    ID_BGSPerk::StormEnchanter,
+    ID_BGSPerk::FrostEnchanter,
+    ID_BGSPerk::FireEnchanter,
+    ID_BGSPerk::ExtraEffect,
+    ID_BGSPerk::InsightfulEnchanter,
+    ID_BGSPerk::CorpusEnchanter,
+    ID_BGSPerk::SoulSqueezer,
+    ID_BGSPerk::Investor,
+    ID_BGSPerk::Merchant,
+    ID_BGSPerk::fence,
+    ID_BGSPerk::SilverTongue,
+    ID_BGSPerk::Allure,
+    ID_BGSPerk::Bribery,
+    ID_BGSPerk::WellFitted,
+    ID_BGSPerk::FistsOfSteel,
+    ID_BGSPerk::Conditioning,
+    ID_BGSPerk::TowerOfStrength,
+    ID_BGSPerk::ShieldCharge,
+    ID_BGSPerk::ElementalProtection,
+    ID_BGSPerk::DeflectArrows,
+    ID_BGSPerk::PowerBashPerk,
+    ID_BGSPerk::DisarmingBash,
+    ID_BGSPerk::Bullseye,
+    ID_BGSPerk::Ranger,
+    ID_BGSPerk::PowerShot,
+    ID_BGSPerk::EagleEye30,
+    ID_BGSPerk::Purity,
+    ID_BGSPerk::Catalyst,
+    ID_BGSPerk::ImprovedVirulity,
+    ID_BGSPerk::ImprovedRemedy,
+    ID_BGSPerk::Experimenter50,
+    ID_BGSPerk::Poisoner,
+    ID_BGSPerk::Benefactor,
+    ID_BGSPerk::Physician,
+    ID_BGSPerk::ShadowWarrior,
+    ID_BGSPerk::MuffledMovement,
+    ID_BGSPerk::AssassinsBlade,
+    ID_BGSPerk::Backstab,
+    ID_BGSPerk::LightFoot,
+    ID_BGSPerk::GoldenTouch,
+    ID_BGSPerk::Unbreakable,
+    ID_BGSPerk::Locksmith,
+    ID_BGSPerk::PerfectTouch,
+    ID_BGSPerk::Cutpurse,
+    ID_BGSPerk::NightThief,
+    ID_BGSPerk::Misdirection,
+    ID_BGSPerk::AugmentedShock,
+    ID_BGSPerk::QuietCasting,
+    ID_BGSPerk::Stability,
+    ID_BGSPerk::Respite,
+    ID_BGSPerk::Regeneration,
+    ID_BGSPerk::atronach,
+    ID_BGSPerk::Recovery50,
+    ID_BGSPerk::Recovery30,
+    ID_BGSPerk::StormMastery,
+    ID_BGSPerk::TestLightningMage,
+    ID_BGSPerk::FrostMastery,
+    ID_BGSPerk::TestFrostMage,
+    ID_BGSPerk::AugmentedFrost,
+    ID_BGSPerk::FireMastery,
+    ID_BGSPerk::TestFireMage,
+    ID_BGSPerk::AugmentedFlames,
+    ID_BGSPerk::Necromage,
+    ID_BGSPerk::KindredMage,
+    ID_BGSPerk::Animage,
+    ID_BGSPerk::DarkSouls,
+    ID_BGSPerk::Necromancy,
+    ID_BGSPerk::MagicResistance70,
+    ID_BGSPerk::MagicResistance50,
+    ID_BGSPerk::MagicResistance30,
+    ID_BGSPerk::DragonArmor,
+    ID_BGSPerk::ArcaneBlacksmith,
+    ID_BGSPerk::Unhindered,
+    ID_BGSPerk::CustomFit,
+    ID_BGSPerk::RangeOfMovement,
+    ID_BGSPerk::MatchingSet,
+    ID_BGSPerk::HuntersDiscipline,
+    ID_BGSPerk::Warmaster,
+    ID_BGSPerk::ParalyzingStrike,
+    ID_BGSPerk::Sweep,
+    ID_BGSPerk::Skullcrusher30,
+    ID_BGSPerk::DeepWounds30,
+    ID_BGSPerk::SavageStrike
+};
+
+char *skills[] = {
+	"alteration",
+	"marksman",
+	"alchemy",
+	"conjuration", 
+	"block", 
+	"lightarmor", 
+	"destruction",
+	"heavyarmor", 
+	"lockpicking", 
+	"enchanting", 
+	"onehanded", 
+	"pickpocket",
+	"illusion", 
+	"smithing", 
+	"sneak", 
+	"restoration", 
+	"twohanded", 
+	"speechcraft"
+};
+
+int word_ids[] = {
+    ID_TESWordOfPower::DragonFakeWord,
+    ID_TESWordOfPower::MQFakeWord,
+    ID_TESWordOfPower::HowlCallOfTheWild3,
+    ID_TESWordOfPower::HowlCallOfTheWild2,
+    ID_TESWordOfPower::HowlCallOfTheWild1,
+    ID_TESWordOfPower::WordWoodElfBeastTongue,
+    ID_TESWordOfPower::WordImperialVoiceOfTheEmperor,
+    ID_TESWordOfPower::WordNordBattleCry,
+    ID_TESWordOfPower::HowlSummonWolves3,
+    ID_TESWordOfPower::HowlSummonWolves2,
+    ID_TESWordOfPower::HowlFear3,
+    ID_TESWordOfPower::HowlFear2,
+    ID_TESWordOfPower::HowlSummonWolves1,
+    ID_TESWordOfPower::HowlFear1,
+    ID_TESWordOfPower::HowlDetectLife,
+    ID_TESWordOfPower::WordNus,
+    ID_TESWordOfPower::WordSlen,
+    ID_TESWordOfPower::WordIiz,
+    ID_TESWordOfPower::WordGut,
+    ID_TESWordOfPower::WordMey,
+    ID_TESWordOfPower::WordZul,
+    ID_TESWordOfPower::WordOv,
+    ID_TESWordOfPower::WordDrem,
+    ID_TESWordOfPower::WordKaan,
+    ID_TESWordOfPower::WordQo,
+    ID_TESWordOfPower::WordBah,
+    ID_TESWordOfPower::WordStrun,
+    ID_TESWordOfPower::WordAus,
+    ID_TESWordOfPower::WordLun,
+    ID_TESWordOfPower::WordKrii,
+    ID_TESWordOfPower::WordNir,
+    ID_TESWordOfPower::WordYah,
+    ID_TESWordOfPower::WordLaas,
+    ID_TESWordOfPower::WordTah,
+    ID_TESWordOfPower::WordMir,
+    ID_TESWordOfPower::WordRaan,
+    ID_TESWordOfPower::WordViik,
+    ID_TESWordOfPower::WordHaal,
+    ID_TESWordOfPower::WordZun,
+    ID_TESWordOfPower::WordDiin,
+    ID_TESWordOfPower::WordKrah,
+    ID_TESWordOfPower::WordFo,
+    ID_TESWordOfPower::WordZoor,
+    ID_TESWordOfPower::WordKaal,
+    ID_TESWordOfPower::WordHun,
+    ID_TESWordOfPower::WordUl,
+    ID_TESWordOfPower::WordKlo,
+    ID_TESWordOfPower::WordTiid,
+    ID_TESWordOfPower::WordViing,
+    ID_TESWordOfPower::WordAh,
+    ID_TESWordOfPower::WordOd,
+    ID_TESWordOfPower::WordFrul,
+    ID_TESWordOfPower::WordZah,
+    ID_TESWordOfPower::WordJoor,
+    ID_TESWordOfPower::WordKoor,
+    ID_TESWordOfPower::WordVah,
+    ID_TESWordOfPower::WordLok,
+    ID_TESWordOfPower::WordDun,
+    ID_TESWordOfPower::WordGrah,
+    ID_TESWordOfPower::WordSu,
+    ID_TESWordOfPower::WordMaar,
+    ID_TESWordOfPower::WordRu,
+    ID_TESWordOfPower::WordFaas,
+    ID_TESWordOfPower::WordGron,
+    ID_TESWordOfPower::WordZii,
+    ID_TESWordOfPower::WordFeim,
+    ID_TESWordOfPower::WordKest,
+    ID_TESWordOfPower::WordNah,
+    ID_TESWordOfPower::WordWuld,
+    ID_TESWordOfPower::TestWordSah,
+    ID_TESWordOfPower::TestWordLo,
+    ID_TESWordOfPower::TestWordFiik,
+    ID_TESWordOfPower::WordDragonFire03,
+    ID_TESWordOfPower::WordDragonFire02,
+    ID_TESWordOfPower::WordDragonFire01,
+    ID_TESWordOfPower::WordShul,
+    ID_TESWordOfPower::WordToor,
+    ID_TESWordOfPower::WordYol,
+    ID_TESWordOfPower::WordDah,
+    ID_TESWordOfPower::WordRo,
+    ID_TESWordOfPower::WordFus
+};
+
+int daedric_ids[] = {
+	ID_TESObjectARMO::ArmorDaedricBoots,
+	ID_TESObjectARMO::ArmorDaedricCuirass,
+	ID_TESObjectARMO::ArmorDaedricGauntlets,
+	ID_TESObjectARMO::ArmorDaedricHelmet,
+	ID_TESObjectARMO::ArmorDaedricShield,
+	ID_TESObjectWEAP::DaedricWarAxe,
+	ID_TESObjectWEAP::DaedricBattleaxe,
+	ID_TESObjectWEAP::DaedricBow,
+	ID_TESObjectWEAP::DaedricDagger,
+	ID_TESObjectWEAP::DaedricGreatsword,
+	ID_TESObjectWEAP::DaedricMace,
+	ID_TESObjectWEAP::DaedricSword,
+	ID_TESObjectWEAP::DaedricWarhammer
+};
+
+void main()
+{
+	PrintNote("[%s] started, see '%s' for more info", SCR_NAME, CONFIG_FILE);
+	BYTE key_skills = IniReadInt(CONFIG_FILE, "main", "key_skills", 0);
+	BYTE key_perks = IniReadInt(CONFIG_FILE, "main", "key_perks", 0);
+	BYTE key_carryweight = IniReadInt(CONFIG_FILE, "main", "key_carryweight", 0);
+	BYTE key_gm = IniReadInt(CONFIG_FILE, "main", "key_gm", 0);
+	BYTE key_words = IniReadInt(CONFIG_FILE, "main", "key_words", 0);
+	BYTE key_items = IniReadInt(CONFIG_FILE, "main", "key_items", 0);
+	bool gmState = FALSE; 
+	while (TRUE)
+	{
+		if (GetKeyPressed(key_skills))
+		{
+			PrintNote("[%s] Adding skill points", SCR_NAME);
+			for (int I = 0; I < sizeof(skills) / sizeof(skills[0]); I++)
+				Game::IncrementSkillBy(skills[I], 1000);
+			PrintNote("[%s] Skill points were added", SCR_NAME);
+		} 
+		else
+		if (GetKeyPressed(key_perks))
+		{
+			PrintNote("[%s] Adding perks", SCR_NAME);
+			CActor *player = Game::GetPlayer();
+			for (int I = 0; I < sizeof(perk_ids) / sizeof(perk_ids[0]); I++)
+			{
+				// im not doing rtti cast check cuz im sure that all this ids are for perks
+				BGSPerk *perk = (BGSPerk *)Game::GetFormById(perk_ids[I]);
+				Actor::AddPerk(player, perk);
+			}
+			PrintNote("[%s] Perks were added", SCR_NAME);
+		} 
+		else
+		if (GetKeyPressed(key_carryweight))
+		{
+			PrintNote("[%s] Increasing CarryWeight", SCR_NAME);
+			CActor *player = Game::GetPlayer();
+			Actor::ModActorValue(player, "carryweight", 10000);
+			PrintNote("[%s] Carryweight increased", SCR_NAME);
+			Wait(500);
+		}
+		else
+		if (GetKeyPressed(key_gm))
+		{
+			PrintNote("[%s] Switching god mode", SCR_NAME);
+			gmState = !gmState;
+			Debug::SetGodMode(gmState); //same as ExecuteConsoleCommand("tgm", NULL);			
+			PrintNote("[%s] God mode state is %d", SCR_NAME, gmState);
+			Wait(500);
+		} else
+		if (GetKeyPressed(key_words))
+		{
+			PrintNote("[%s] Learning words", SCR_NAME);
+			CActor *player = Game::GetPlayer();
+			Actor::ModActorValue(player, "dragonsouls", 100);
+			for (int I = 0; I < sizeof(word_ids) / sizeof(word_ids[0]); I++)
+			{
+				TESWordOfPower * w = (TESWordOfPower *)Game::GetFormById(word_ids[I]);
+				Game::UnlockWord(w);
+				Game::TeachWord(w);
+			}
+			PrintNote("[%s] Learned successfully", SCR_NAME);
+			Wait(500);
+		} else
+		if (GetKeyPressed(key_items))
+		{
+			PrintNote("[%s] Adding items", SCR_NAME);
+			CActor *player = Game::GetPlayer();
+			// add equipment
+			for (int I = 0; I < sizeof(daedric_ids) / sizeof(daedric_ids[0]); I++)
+			{
+				TESForm *item = Game::GetFormById(daedric_ids[I]);
+				ObjectReference::AddItem((TESObjectREFR *)player, item, 1, TRUE);
+			}
+			// gold
+			ObjectReference::AddItem((TESObjectREFR *)player, Game::GetFormById(ID_TESObjectMISC::Gold001), 1000000, TRUE);
+			// arrows
+			ObjectReference::AddItem((TESObjectREFR *)player, Game::GetFormById(ID_TESAmmo::DaedricArrow), 10000, TRUE);
+			PrintNote("[%s] Items were added", SCR_NAME);
+			Wait(500);
+		} 
+
+		Wait(0);
+	}
+}
+
